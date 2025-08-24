@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MYSTERIOUS XITERS</title>
+  <link rel="icon" href="mysterious.ico" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    html, body {
+      margin: 0; padding: 0;
+      height: 100%; width: 100%;
+      font-family: 'Montserrat', sans-serif;
+      background: #0d0d0d;
+      color: #fff;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0; left: 0;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 400px;
+      width: 90%;
+      background: rgba(30, 0, 0, 0.6);
+      border-radius: 12px;
+      padding: 30px 20px;
+      text-align: center;
+      animation: fadeIn 1s ease forwards;
+      opacity: 0;
+      box-shadow: 0 4px 14px rgba(230, 57, 70, 0.35);
+    }
+
+    h1 {
+      font-weight: 600;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #e63946;
+    }
+
+    .copy-box {
+      width: 80%;
+      height: 100px;
+      padding: 10px;
+      border: 1px solid #e63946;
+      border-radius: 5px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 1rem;
+      font-family: 'Montserrat', sans-serif;
+      resize: none;
+      cursor: text;
+    }
+
+    .copy-box:focus {
+      outline: none;
+    }
+
+    .copy-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #e63946;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .copy-btn:hover {
+      background: #ff4757;
+    }
+
+    .copy-msg {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #4caf50;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .copy-msg.show {
+      opacity: 1;
+    }
+
+    .copyright {
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: #bbb;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="particles-js"></div>
+
+  <div class="container">
+    <h1>COPY HERE</h1>
+    <textarea class="copy-box" readonly>HELLO</textarea>
+    
+    <!-- 🔹 Copy button -->
+    <button class="copy-btn" onclick="copyText()">Copy</button>
+    
+    <!-- 🔹 Copy message -->
+    <p class="copy-msg" id="copyMsg">Copied!</p>
+
+    <p class="copyright">&copy; 2025 MYSTERIOUS XITERS</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 70, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": "#e63946" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.6, "random": true },
+        "size": { "value": 3, "random": true },
+        "line_linked": {
+          "enable": true,
+          "distance": 120,
+          "color": "#e63946",
+          "opacity": 0.3,
+          "width": 1
+        },
+        "move": { "enable": true, "speed": 1.5, "random": true }
+      },
+      "interactivity": {
+        "events": {
+          "onhover": { "enable": true, "mode": "grab" },
+          "onclick": { "enable": true, "mode": "push" }
+        }
+      },
+      "retina_detect": true
+    });
+
+    // 🔹 Copy function
+    function copyText() {
+      const textArea = document.querySelector('.copy-box');
+      textArea.select();
+      textArea.setSelectionRange(0, 99999); // for mobile
+      navigator.clipboard.writeText(textArea.value);
+
+      const msg = document.getElementById('copyMsg');
+      msg.classList.add('show');
+      setTimeout(() => msg.classList.remove('show'), 2000);
+    }
+  </script>
+</body>
+</html>

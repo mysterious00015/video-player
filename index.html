@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" href="mysterious.ico" type="mysterious/ico">
+</head>
+<body>
+  <canvas id="snowfall"></canvas>
+  <div id="lamp-glow"></div>
+  <div class="glow"></div>
+
+  <div class="wrapper">
+    <form id="loginForm">
+      <h1>Login</h1>
+
+      <div class="input-box">
+        <input type="email" id="email" placeholder="Email" required>
+        <i class='bx bxs-user'></i>
+      </div>
+      <div class="input-box">
+        <input type="password" id="password" placeholder="Password" required>
+        <i class='bx bxs-lock-alt'></i>
+      </div>
+
+      <button type="submit" class="btn">Login</button>
+
+      <div class="register-link">
+        <p>Don't have an account? <a href="register.html">Register</a></p>
+      </div>
+      <div class="register-link">
+        <p>Don't remember your password? <a href="forget.html">Reset</a></p>
+      </div>
+
+      <!-- Google Sign-In Button -->
+      <div style="display: flex; justify-content: center; margin-top: 20px;">
+        <button type="button" id="google-signin-btn" style="display: flex; align-items: center; gap: 10px; background: white; color: #444; border: 1px solid #ccc; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+          <img src="google.png" alt="Google logo" width="20" height="20">
+          <span>Sign in with Google</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+  <!-- Snowfall Effect -->
+  <script>
+    const canvas = document.getElementById('snowfall');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const snowflakes = [];
+    function createSnowflake() {
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 3 + 2,
+        speedY: Math.random() * 1 + 0.5,
+        speedX: Math.random() * 0.5 - 0.25,
+      };
+    }
+
+    for (let i = 0; i < 100; i++) snowflakes.push(createSnowflake());
+
+    function drawSnowflakes() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      for (let flake of snowflakes) {
+        ctx.moveTo(flake.x, flake.y);
+        ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      updateSnowflakes();
+      requestAnimationFrame(drawSnowflakes);
+    }
+
+    function updateSnowflakes() {
+      for (let flake of snowflakes) {
+        flake.y += flake.speedY;
+        flake.x += flake.speedX;
+        if (flake.y > height) {
+          flake.y = 0;
+          flake.x = Math.random() * width;
+        }
+      }
+    }
+    drawSnowflakes();
+  </script>
+
+  <!-- Firebase Config and Login -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjaqdwwOUD0Bk6cMZRD6FKzuyQZlfg1hA",
+      authDomain: "free-fire-hack-ccc61.firebaseapp.com",
+      projectId: "free-fire-hack-ccc61",
+      storageBucket: "free-fire-hack-ccc61.appspot.com",
+      messagingSenderId: "202720741653",
+      appId: "1:202720741653:web:b6847bd59c5f494cc0011c",
+      measurementId: "G-TXKRF2BNED"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    // Email login
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          window.location.href = "main.html";
+        })
+        .catch((error) => {
+          alert("Login failed: " + error.message);
+        });
+    });
+
+    // Google login
+    document.getElementById("google-signin-btn").addEventListener("click", function () {
+      auth.signInWithPopup(provider)
+        .then((result) => {
+          const user = result.user;
+          alert("✅ Logged in as " + user.displayName);
+          window.location.href = "main.html";
+        })
+        .catch((error) => {
+          let message = "❌ Google Sign-in failed: " + error.message;
+          if (error.code === "auth/unauthorized-domain") {
+            message = "❌ This domain is not authorized for Google Sign-in.";
+          }
+          alert(message);
+        });
+    });
+  </script>
+</body>
+</html>

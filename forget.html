@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forgot Password</title>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" href="mysterious.ico" type="mysterious/ico">
+  <script type="module">
+    // Firebase v9 Modular SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjaqdwwOUD0Bk6cMZRD6FKzuyQZlfg1hA",
+      authDomain: "free-fire-hack-ccc61.firebaseapp.com",
+      projectId: "free-fire-hack-ccc61",
+      storageBucket: "free-fire-hack-ccc61.firebasestorage.app",
+      messagingSenderId: "202720741653",
+      appId: "1:202720741653:web:b6847bd59c5f494cc0011c",
+      measurementId: "G-TXKRF2BNED"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.sendReset = async function () {
+      const email = document.getElementById("email").value;
+      if (!email) return alert("Please enter your email.");
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        alert("Reset link sent to your email!");
+      } catch (error) {
+        let message = "An unexpected error occurred.";
+
+        if (error.code === "auth/invalid-email") {
+          message = "The email address is invalid.";
+        } else if (error.code === "auth/user-not-found") {
+          message = "No account found with this email.";
+        } else if (error.code === "auth/too-many-requests") {
+          message = "Too many requests. Please try again later.";
+        } else if (error.code === "auth/unauthorized-domain") {
+          message = "This website domain is not authorized in Firebase.";
+        }
+
+        alert(message);
+      }
+    };
+  </script>
+</head>
+<body>
+  <canvas id="snowfall"></canvas>
+  <div id="lamp-glow"></div>
+  <div class="glow" id="cursorGlow"></div>
+  <div class="wrapper">
+    <form onsubmit="event.preventDefault(); sendReset();">
+      <h1 style="color: #fff;">Forgot Password</h1>
+      <div class="input-box">
+        <input type="email" id="email" placeholder="Enter your email" required>
+        <i class='bx bxs-envelope'></i>
+      </div>
+      <button type="submit" class="btn">Send Reset Link</button>
+      <div class="register-link">
+        <p style="color: #fff;">Remember your password? <a href="index.html">Login</a></p>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('snowfall');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const snowflakes = [];
+
+    function createSnowflake() {
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 3 + 2,
+        speedY: Math.random() * 1 + 0.5,
+        speedX: Math.random() * 0.5 - 0.25,
+      };
+    }
+
+    for (let i = 0; i < 100; i++) {
+      snowflakes.push(createSnowflake());
+    }
+
+    function drawSnowflakes() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      for (let flake of snowflakes) {
+        ctx.moveTo(flake.x, flake.y);
+        ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      updateSnowflakes();
+      requestAnimationFrame(drawSnowflakes);
+    }
+
+    function updateSnowflakes() {
+      for (let flake of snowflakes) {
+        flake.y += flake.speedY;
+        flake.x += flake.speedX;
+        if (flake.y > height) {
+          flake.y = 0;
+          flake.x = Math.random() * width;
+        }
+      }
+    }
+
+    drawSnowflakes();
+  </script>
+</body>
+</html>
